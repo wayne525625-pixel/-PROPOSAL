@@ -1,72 +1,54 @@
-# AI-plush-giraffe
-![](https://github.com/rkuo2000/AI-plush-giraffe/blob/main/assets/plush_toy_giraffe.webp?raw=true)
+# LabPatrol：實驗室巡檢 RoboCar
 
----
-## System HW & SW specifications
+> 使用 **AMB82-mini** 作為機器人控制器，搭配 Google Edge AI + Gemma4-E2B 的雙輪代理機器人。
 
-### System Block Diagram
-![](https://github.com/rkuo2000/AI-plush-giraffe/blob/main/assets/AI-plush-toy_block_diagram.png?raw=true)
+![成品示意圖](images/product.png)
+<!-- 請用下方提示詞生成圖片，存成 images/product.png 後上傳 -->
 
-### LLM + Agent
-`gemma4:e2b` based on [Goole-AI-Edge Gallery](https://github.com/google-ai-edge/gallery) v1.0.19 <br>
+## 功能
+- 用語音或文字下達巡檢任務（例：檢查 3 號桌電源供應器是否亮燈）
+- 車載攝影機取像，由 Gemma 描述並判斷
+- IR 與 IMU 本地安全層：障礙、傾斜、斷線自動停車
+- 音效先行 + TTS 回覆，降低等待感
+- 任務日誌（影像、感測器、判斷結果）
 
-### Hardware : 
-1. EVB : AMB82-Mini (built-in camera & mic)
-2. Sound : PAM8403 + speaker
-
----
-## Prompts: 
-`GPT6.1`<br>
-```
-Google Edge AI Gallery App support MCP and Skills, what would be recommended code to run on AMB82-mini to host on the plush toy Giraffe
-```
-
----
-## [Architecture.md](https://github.com/rkuo2000/AI-plush-giraffe/blob/main/Architecture.md)
-```text
-                   SMART GIRAFFE
- ┌────────────────────────────────────────────┐
- │                AMB82-Mini                  │
- │                                            │
- │ Camera ──> local vision ──> perception     │
- │ Mic ─────> audio/event detection           │
- │                                            │
- │              Giraffe Agent API             │
- │        HTTP/WebSocket JSON interface       │
- │                    │                       │
- │       ┌────────────┼────────────┐          │
- │       ▼            ▼            ▼          │
- │    Speaker       Servos        LEDs        │
- │   / playback   head / ears   expression    │
- └────────────────────┬───────────────────────┘
-                      │ Wi-Fi
-                      │
-              Android phone/tablet
- ┌────────────────────▼───────────────────────┐
- │          Google AI Edge Gallery            │
- │                                            │
- │        on-device model / agent             │
- │                 │                          │
- │         Giraffe Agent Skill                │
- │                 │                          │
- │        JS Skill / MCP ecosystem            │
- │                 │                          │
- │       ┌─────────┼─────────┐                │
- │       ▼         ▼         ▼                │
- │     look()    emotion()   move()           │
- │     status()  play()      etc.             │
- └────────────────────────────────────────────┘
-```
-### System Architecture Diagram
-![](https://github.com/rkuo2000/AI-plush-giraffe/blob/main/assets/AI-plush-giraffe_architecture_diagram.png?raw=true)
-
----
-## ProtoTyping
-
-### Prompt 
-`GPT6.1`<br>
-```
-I would like to design an agentic plush toy with Google Edge AI Gemma4-E2B model using AMB82-mini. AMB82-Mini offer features such as image capture, audio/sound recording, play mp3 files (preloaded in SDcard, or receive voice file from TTS), IR distance sensor, IMU, Wheel motor driver. There are different ways for user to communicate with the plush toy, one is using Edge AI App with Gemma4-E2B model to interface with the robot, the other is talking to the agentic plush toy directly. Generate a Proposal.md
+## 系統架構
+```mermaid
+flowchart LR
+  U[使用者] -->|語音/文字| P[手機 Edge AI App + Gemma]
+  U -->|直接說話| M[車上麥克風]
+  M --> A
+  P -->|工具呼叫 Wi-Fi| A[AMB82-mini]
+  A -->|影像/聲音/感測器| P
+  A --> S[本地安全層]
+  S --> D[馬達驅動]
+  A --> C[攝影機]
+  A --> I[IR 測距]
+  A --> G[IMU]
+  A --> K[喇叭 MP3/TTS]
 ```
 
-### [Proposal.md](https://github.com/rkuo2000/AI-plush-giraffe/blob/main/Proposal.md)
+## 安全流程
+```mermaid
+flowchart TD
+  G[Gemma 指令] --> S{安全層檢查}
+  S -->|障礙過近 / 傾斜 / 逾時| X[停車]
+  S -->|安全| E[執行動作]
+```
+
+## 硬體
+AMB82-mini、雙輪底盤與馬達驅動、IR 測距、IMU、喇叭、SD 卡、電池、手機或平板
+
+## 使用方式
+1. 燒錄 AMB82-mini 韌體並連上 Wi-Fi
+2. 手機開啟 App，輸入車子 IP
+3. 以文字或語音下達任務
+
+## AI 成品圖提示詞
+> A cute small two-wheel robot car with a front camera and small speaker, patrolling an electronics lab with oscilloscopes and power supplies on benches, friendly design, soft lighting, product render, clean background.
+
+## 組員
+[姓名 1]、[姓名 2]、[姓名 3]
+
+## 文件
+詳細規劃請見 [PROPOSAL.md](PROPOSAL.md)
