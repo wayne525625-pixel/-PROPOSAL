@@ -44,8 +44,5 @@ AMB82-mini、雙輪底盤與馬達驅動、IR 測距、IMU、喇叭、SD 卡、�
 2. 手機開啟 App，輸入車子 IP
 3. 以文字或語音下達任務
 
-## AI 成品圖提示詞
-> A cute small two-wheel robot car with a front camera and small speaker, patrolling an electronics lab with oscilloscopes and power supplies on benches, friendly design, soft lighting, product render, clean background.
-
 ## 文件
 詳細規劃請見 [PROPOSAL.md](PROPOSAL.md)
