@@ -2,7 +2,7 @@
 
 > 使用 **AMB82-mini** 作為機器人控制器，搭配 Google Edge AI + Gemma4-E2B 的雙輪代理機器人。
 
-![成品示意圖](images/product.png)
+![成品示意圖](product.jpg)
 <!-- 請用下方提示詞生成圖片，存成 images/product.png 後上傳 -->
 
 ## 功能
